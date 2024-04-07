@@ -1,0 +1,19 @@
+.mainDiv {
+    width: 100%;
+    min-height: calc(100vh - 64px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f9c20f;
+    background-image: linear-gradient(
+      211deg,
+      #f9c20f 0%,
+      #f7d64a 24%,
+      #fffb7d 49%,
+      #fffb7d 75%,
+      #f9c20f 100%
+    );
+  }
+  .button:hover {
+    background-color: #ffbc08 !important;
+  }
