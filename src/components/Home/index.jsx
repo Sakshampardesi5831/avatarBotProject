@@ -5,10 +5,13 @@ import { useFirebase } from "../../context/Firebase";
 import { BoardsComponents } from "../";
 import NoBoardComponents from "./NoBoardComponent";
 import CreateBoard from "./CreateBoard";
+import AddCabin from "./AddCabin";
 const HomePage = () => {
   const firebase = useFirebase();
   const user= firebase.currentLoggedInUser();
   const open = firebase.open;
+  const cabinDialog=firebase.cabinDialog;
+  const handleAddCabinClose = firebase.handleDialogClose;
   const handleDialogOpen = firebase.handleDialogOpen;
 
   const [allData, setAllData] = useState([]);
@@ -21,7 +24,6 @@ const HomePage = () => {
    setAllData(data);
   }
   useEffect(() => {
-    // getTableData();
     getDataFromPath()
   }, []);
 
@@ -41,6 +43,7 @@ const HomePage = () => {
           }
         })}
       </div>
+      <AddCabin drawerState={cabinDialog} handleClose={handleAddCabinClose} />
     </Fragment>
   );
 };

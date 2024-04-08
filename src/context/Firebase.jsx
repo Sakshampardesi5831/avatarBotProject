@@ -21,7 +21,8 @@ const firebaseConfig = {
   messagingSenderId: import.meta.env.VITE_APP_MESSAGESENDER_ID,
   appId: import.meta.env.VITE_APP_MEASUREMENT_ID,
   measurementId: import.meta.env.VITE_APP_APP_DOMAIN,
-  databaseURL:"https://avatarbot-6dd46-default-rtdb.asia-southeast1.firebasedatabase.app/",
+  databaseURL:
+    "https://avatarbot-6dd46-default-rtdb.asia-southeast1.firebasedatabase.app/",
 };
 const firebaseApp = initializeApp(firebaseConfig);
 const firebaseAuth = getAuth(firebaseApp);
@@ -41,8 +42,12 @@ export const FirebaseProvider = ({ children }) => {
   const handleDialogClose = () => {
     setOpen(false);
   };
-
+  /*--------------------------------------------------------------------------------------------*/
   //Utiliy method
+  const [cabinDialog, setCabinDialog] = useState(false);
+  const [formsToGernerate, setFormsToGenerate] = useState(0);
+  const [addCabinFormData, setAddCabinFormData] = useState({});
+   const [currentStep,setCurrentStep]=useState(0);
   const [formData, setFormData] = useState({});
   const [user, setUser] = useState(null);
   const [authStatus, setAuthStatus] = useState(false);
@@ -52,11 +57,9 @@ export const FirebaseProvider = ({ children }) => {
   const signInUserUsingEmailAndPassword = (email, password) => {
     return signInWithEmailAndPassword(firebaseAuth, email, password);
   };
-  console.log(formData);
   const signOutUser = () => {
     return signOut(firebaseAuth);
   };
-
   useEffect(() => {
     onAuthStateChanged(firebaseAuth, (user) => {
       if (user) {
@@ -131,6 +134,17 @@ export const FirebaseProvider = ({ children }) => {
       console.log(error.message);
     }
   };
+ console.log(addCabinFormData);
+  /**----------------------------------------------------------------------------------------------------- */
+ 
+  const handleAddCabinOpen = () => {
+    setCabinDialog(true);
+  };
+  const handleAddCabinClose = () => {
+    setCabinDialog(false);
+  };
+  
+  /**---------------------------------------------------------------------------------------------------------- */
   return (
     <FirebaseContext.Provider
       value={{
@@ -149,6 +163,16 @@ export const FirebaseProvider = ({ children }) => {
         setFormData,
         setBoardForm,
         boardForm,
+        cabinDialog,
+        setCabinDialog,
+        handleAddCabinOpen,
+        handleAddCabinClose,
+        setFormsToGenerate,
+        formsToGernerate,
+        addCabinFormData,
+        setAddCabinFormData,
+        setCurrentStep,
+        currentStep
       }}
     >
       {children}
