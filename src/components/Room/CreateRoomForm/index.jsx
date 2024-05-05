@@ -1,32 +1,21 @@
-import { useState } from "react";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { useFirebase } from "../../../context/Firebase";
-const AddCabinForm = () => {
+const CreateRoomForm = () => {
   const firebase = useFirebase();
-  const [cabinName1, setCabinName1] = useState("");
-  const addCabinFormData = firebase.addCabinFormData;
+  const [room, setRoom] = useState("");
   const [error, setError] = useState(false);
-  const [formsToGenerate, setFormsGenerate] = useState(0);
-  const handleCabinClose = firebase.handleCabinClose;
-  const currentStep = firebase.currentStep;
-  const setCurrentStep = firebase.setCurrentStep;
-  const setBoardForm = firebase.setBoardForm;
-  
-  const handleSubmit =(e) => {
+  const handleRoomCloseDialog = firebase.handleRoomClose;
+ 
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("hello");
-    if(cabinName1===""){
+    if (room === "") {
       setError(true);
       return;
     }
-    let myvalue={
-      boardName:cabinName1,
-    }
-    firebase.setAddCabinFormData({...myvalue,...addCabinFormData})
-    firebase.setFormsToGenerate(formsToGenerate);
-    setCurrentStep(currentStep + 1);
-    setBoardForm("dynamicDevice");
+    await firebase.saveRoomForm(room);
+    setRoom("");
+    handleRoomCloseDialog();
   };
   return (
     <Fragment>
@@ -39,23 +28,15 @@ const AddCabinForm = () => {
         }}
       >
         <Typography variant="h4" sx={{ fontWeight: "700" }}>
-          Cabin Name
+          Enter Room Name
         </Typography>
         <TextField
           sx={{ width: "100%", marginTop: "20px" }}
-          placeholder="Enter the Cabin Name"
-          onChange={(e) => setCabinName1(e.target.value)}
-          value={cabinName1}
+          placeholder="Enter the Room Name"
+          onChange={(e) => setRoom(e.target.value)}
+          value={room}
         />
-        {error && (
-          <span style={{ color: "red" }}>cabin name is required !</span>
-        )}
-        <TextField
-          sx={{ width: "100%", marginTop: "20px" }}
-          placeholder="Enter the Devices Quantity"
-          onChange={(e) => setFormsGenerate(e.target.value)}
-          value={formsToGenerate}
-        />
+        {error && <span style={{ color: "red" }}>room name is required !</span>}
         <Box
           sx={{
             width: "100%",
@@ -75,7 +56,7 @@ const AddCabinForm = () => {
                 backgroundColor: "red",
               },
             }}
-            onClick={()=>handleCabinClose()}
+            onClick={handleRoomCloseDialog}
           >
             close
           </Button>
@@ -88,7 +69,7 @@ const AddCabinForm = () => {
             }}
             onClick={(e) => handleSubmit(e)}
           >
-            Next
+            Save Room
           </Button>
         </Box>
       </Box>
@@ -96,4 +77,4 @@ const AddCabinForm = () => {
   );
 };
 
-export default AddCabinForm;
+export default CreateRoomForm;

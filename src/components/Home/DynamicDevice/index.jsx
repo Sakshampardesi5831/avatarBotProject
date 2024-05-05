@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Fragment, useState } from "react";
 import {} from "@mui/icons-material";
 import { Box, Typography, TextField, Switch, Button } from "@mui/material";
@@ -7,12 +8,54 @@ const DynamicDevice = () => {
   const formsToFill = firebase.formsToGernerate;
   const currentStep = firebase.currentStep;
   const [checked, setChecked] = useState(false);
-  const handleCloseDialog = firebase.handleAddCabinClose;
+  const [error, setError] = useState(false);
+  const addCabinFormData = firebase.addCabinFormData;
   const [dynamicDevice, setDynamicDevice] = useState("");
   const [isFanDevice, setIsFanDevice] = useState("No");
-  const handleSubmit = (e) => {
+  const setBoardForm = firebase.setBoardForm;
+  const handleconfimationPage = async (e) => {
     e.preventDefault();
-    firebase.setCurrentStep(currentStep + 1);
+    let newData = {};
+
+    if (checked) {
+      newData = {
+        [`A${currentStep}`]: {
+          deviceName: dynamicDevice,
+          isFan: true,
+          fanSpeed: "Low",
+          power: "Off",
+          fanState: "Low",
+          powerState: "Off",
+        },
+      };
+    } else {
+      newData = {
+        [`D${currentStep}`]: {
+          deviceName: dynamicDevice,
+          power: 0,
+          isFan: false,
+          powerState: 0,
+        },
+      };
+    }
+    // firebase.setAddCabinFormData({
+    //   ...addCabinFormData,
+    //   [addCabinFormData.cabinName]: {
+    //     ...addCabinFormData[addCabinFormData.cabinName],
+    //     ...newData,
+    //   },
+    // });
+    const myPrevObject = firebase.addCabinFormData;
+    myPrevObject.boards = {
+      ...myPrevObject.boards,
+      ...newData,
+    };
+    //console.log(myPrevObject);
+    firebase.setAddCabinFormData(myPrevObject);
+    setDynamicDevice("");
+    setChecked(false);
+    setIsFanDevice("No");
+    setBoardForm("confirmation");
   };
   const handleChange = (event) => {
     setChecked(event.target.checked);
@@ -21,11 +64,108 @@ const DynamicDevice = () => {
   };
 
   const dialogCloseHandler = () => {
-    handleCloseDialog();
+    firebase.handleCabinClose();
     firebase.setFormsToGenerate(0);
     firebase.setCurrentStep(0);
   };
+  const handleNextForm = (e) => {
+    e.preventDefault();
+    if (dynamicDevice.length === 0) {
+      setError(true);
+      return;
+    }
+    if (currentStep == 1) {
+      let newData = {};
+      if (checked) {
+        newData = {
+          boards: {
+            [`A${currentStep}`]: {
+              deviceName: dynamicDevice,
+              isFan: true,
+              fanSpeed: "Low",
+              power: "Off",
+              fanState: "Low",
+              powerState: "Off",
+            },
+          },
+        };
+      } else {
+        /*newData = {
+          [addCabinFormData.cabinName]: {
+            [`D${currentStep}`]: {
+              deviceName: dynamicDevice,
+              power: 0,
+              isFan: false,
+              powerState: 0,
+            },
+          },
+        };*/
+        newData = {
+          boards: {
+            [`D${currentStep}`]: {
+              deviceName: dynamicDevice,
+              power: 0,
+              isFan: false,
+              powerState: 0,
+            },
+          },
+        };
+      }
+      const mergedFormData = { ...addCabinFormData, ...newData };
+      console.log(mergedFormData);
+      firebase.setAddCabinFormData(mergedFormData);
+      setDynamicDevice("");
+      setChecked(false);
+      setIsFanDevice("No");
+      firebase.setCurrentStep(currentStep + 1);
+      const setBoardForm = firebase.setBoardForm;
+      setBoardForm("dynamicDevice");
+    } else {
+      let newData = {};
 
+      if (checked) {
+        newData = {
+          [`A${currentStep}`]: {
+            deviceName: dynamicDevice,
+            isFan: true,
+            fanSpeed: "Low",
+            power: "Off",
+            fanState: "Low",
+            powerState: "Off",
+          },
+        };
+      } else {
+        newData = {
+          [`D${currentStep}`]: {
+            deviceName: dynamicDevice,
+            power: 0,
+            isFan: false,
+            powerState: 0,
+          },
+        };
+      }
+      /*firebase.setAddCabinFormData({
+        ...addCabinFormData,
+        [addCabinFormData.cabinName]: {
+          ...addCabinFormData[addCabinFormData.cabinName],
+          ...newData,
+        },
+      });*/
+      const myPrevObject = firebase.addCabinFormData;
+      console.log(myPrevObject);
+      myPrevObject.boards = {
+        ...myPrevObject.boards,
+        ...newData,
+      };
+      //console.log(myPrevObject);
+      firebase.setAddCabinFormData(myPrevObject);
+      setDynamicDevice("");
+      setChecked(false);
+      setIsFanDevice("No");
+      setBoardForm("dynamicDevice");
+      firebase.setCurrentStep(currentStep + 1);
+    }
+  };
   const renderButton = () => {
     return currentStep < formsToFill ? (
       <Button
@@ -35,7 +175,7 @@ const DynamicDevice = () => {
           backgroundColor: "#f9c20f",
           color: "#fff",
         }}
-        onClick={(e) => handleSubmit(e)}
+        onClick={(e) => handleNextForm(e)}
       >
         Next
       </Button>
@@ -47,9 +187,9 @@ const DynamicDevice = () => {
           backgroundColor: "#f9c20f",
           color: "#fff",
         }}
-        onClick={(e) => handleSubmit(e)}
+        onClick={(e) => handleconfimationPage(e)}
       >
-        Finish
+        Go to Confirmation page
       </Button>
     );
   };
@@ -122,21 +262,10 @@ const DynamicDevice = () => {
             close
           </Button>
           {renderButton()}
-          {/* <Button
-          className="button"
-          sx={{
-            padding: "10px 20px",
-            backgroundColor: "#f9c20f",
-            color: "#fff",
-          }}
-          onClick={(e) => handleSubmit(e)}
-        >
-          Next
-        </Button> */}
         </Box>
-        <Typography variant="body1" sx={{ fontWeight: "700", color: "#000" }}>
+        {/* <Typography variant="body1" sx={{ fontWeight: "700", color: "#000" }}>
           You can Register Only 5 devices to every cabin
-        </Typography>
+        </Typography> */}
       </Box>
     </Fragment>
   );

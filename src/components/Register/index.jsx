@@ -60,6 +60,7 @@ const Register = () => {
               minHeight: "80vh",
               boxShadow: "0px 2px 5px -1px rgba(0,0,0,0.3)",
               backgroundColor: "#fff",
+              borderRadius:"20px"
             }}
           >
             <Box
@@ -68,7 +69,7 @@ const Register = () => {
                 height: {
                   xs: "90vh",
                   sm: "90vh",
-                  md: "90vh",
+                  md: "80vh",
                   lg: "80vh",
                   xl: "80vh",
                 },
@@ -119,30 +120,6 @@ const Register = () => {
                   justifyContent: "center",
                 }}
               >
-                {/* <TextField
-                  fullWidth
-                  label="UserName"
-                  placeholder="Enter the UserName"
-                  variant="outlined"
-                  type="text"
-                  margin="normal"
-                  sx={{
-                    marginBottom: {
-                      xs: "18px",
-                      sm: "18px",
-                      md: "20px",
-                      lg: "25px",
-                      xl: "25px",
-                    },
-                  }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <PersonOutlined />
-                      </InputAdornment>
-                    ),
-                  }}
-                /> */}
                 <TextField
                   fullWidth
                   label="Email"
@@ -251,6 +228,7 @@ const Register = () => {
                   >
                     <Box sx={{ display: "flex", gap: "10px" }}>
                       <Google
+                        onClick={() => firebaseInstance.signUpWithGoogle()}
                         sx={{
                           fontSize: {
                             xs: "40px",

@@ -1,30 +1,28 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment } from "react";
 import { Box, Typography, Button } from "@mui/material";
 import { useFirebase } from "../../../context/Firebase";
-import { useNavigate } from "react-router-dom";
+import { Add } from "@mui/icons-material";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 const ConfirmationPage = () => {
   const firebase = useFirebase();
-  const navigate = useNavigate();
-  const [boardsCreatedName, setBoardsCreatedName] = useState([]);
-  const handleCloseDialog = firebase.handleDialogClose;
-  const formData = firebase.formData;
-  //const setBoardForm = firebase.setBoardForm;
-  const MakeBoards = firebase.createTheTreeInDatabase;
-  const handleSubmit = async (e) => {
+  const handleCabinClose = firebase.handleCabinClose;
+  const addCabinFormData = firebase.addCabinFormData;
+  const saveCabinForm = firebase.saveCabinForm;
+  const cabinData = addCabinFormData.boards;
+  const roomId = useParams().id;
+  console.log(addCabinFormData);
+  const handleSubmit = (e) => {
     e.preventDefault();
-    await MakeBoards(formData);
-    navigate("/dashboard");
-    handleCloseDialog();
+    try {
+      saveCabinForm(addCabinFormData, roomId);
+      toast.success("Board and Devices created successfully");
+      handleCabinClose();
+    } catch (error) {
+      console.log(error.message);
+      toast.error(error.message);
+    }
   };
-  useEffect(() => {
-    console.log(formData[formData.cabinName]);
-    const myData = Object.keys(formData[formData.cabinName]).map(
-      (item) => item
-    );
-    console.log(myData);
-    setBoardsCreatedName(myData);
-  }, []);
-
   return (
     <Fragment>
       <Box
@@ -36,24 +34,19 @@ const ConfirmationPage = () => {
           textAlign: "center",
         }}
       >
-        <Typography fontSize={"20px"}>
-          Boards Created for {formData.cabinName}
+        <Typography sx={{ fontSize: "20px", fontWeight: "800" }}>
+          These are Boards which are created
         </Typography>
-        {boardsCreatedName.map((item, index) => (
-          <Typography
-            key={index}
-            variant="body1"
-            sx={{
-              fontWeight: "700",
-              color: "#000",
-              fontSize: "20px",
-              marginTop: "10px",
-            }}
-          >
-            {item}
-          </Typography>
-        ))}
-
+        {Object.keys(cabinData).map((item) => {
+          return (
+            <Typography
+              sx={{ fontSize: "20px", fontWeight: "500", marginTop: "20px" }}
+              key={item}
+            >
+              {cabinData[item].deviceName}
+            </Typography>
+          );
+        })}
         <Box
           sx={{
             width: "100%",
@@ -73,7 +66,7 @@ const ConfirmationPage = () => {
                 backgroundColor: "red ",
               },
             }}
-            onClick={handleCloseDialog}
+            onClick={handleCabinClose}
           >
             close
           </Button>
@@ -86,12 +79,9 @@ const ConfirmationPage = () => {
             }}
             onClick={(e) => handleSubmit(e)}
           >
-            Submit
+            <Add /> Create Board and Devices
           </Button>
         </Box>
-        <Typography variant="body1" sx={{ fontWeight: "700", color: "#000" }}>
-          You can Register Only 5 devices to every cabin
-        </Typography>
       </Box>
     </Fragment>
   );

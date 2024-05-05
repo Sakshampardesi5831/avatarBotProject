@@ -31,7 +31,7 @@ const NoBoardComponents = ({setCreateBoardDrawer}) => {
         <Typography
           sx={{ fontSize: "30px", fontWeight: "500", textAlign: "center",color:"#fff" }}
         >
-          No Board is Register Currently Click to Create Cabin
+          No Room  is Registered Currently Click to Create Room
         </Typography>
         <Button
           onClick={() => setCreateBoardDrawer(true)}
@@ -46,7 +46,7 @@ const NoBoardComponents = ({setCreateBoardDrawer}) => {
           }}
         >
           <Add/>
-          Create Cabin
+          Create Room
         </Button>
       </Box>
     </Box>

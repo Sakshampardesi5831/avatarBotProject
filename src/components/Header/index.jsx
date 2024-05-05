@@ -22,6 +22,7 @@ const Header = () => {
   };
   const firebase = useFirebase();
   const activeUser = firebase.currentLoggedInUser();
+  const handleRoomOpen = firebase.handleRoomOpen;
   const isMediumScreen = useMediaQuery("(max-width: 860px)");
   const isSmallScreen = useMediaQuery("(max-width: 600px)");
   const isExtraSmallScreen = useMediaQuery("(max-width: 480px)");
@@ -93,7 +94,7 @@ const Header = () => {
             </List>
             {activeUser?.authStatus && (
               <Button
-                onClick={() =>firebase.handleAddCabinOpen()}
+                onClick={handleRoomOpen}
                 sx={{
                   fontSize: "15px",
                   backgroundColor: "#f9c20f",
@@ -107,7 +108,7 @@ const Header = () => {
                   display: { xs: "none", sm: "none", md: "flex" },
                 }}
               >
-               <Add/> Add Cabin
+               <Add/> Add Room
               </Button>
             )}
             {activeUser?.authStatus && (
