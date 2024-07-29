@@ -9,7 +9,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { Bolt } from "@mui/icons-material";
+import { Add, Bolt } from "@mui/icons-material";
 import { Fragment, useState } from "react";
 import { useFirebase } from "../../context/Firebase";
 import { Link } from "react-router-dom";
@@ -22,6 +22,7 @@ const Header = () => {
   };
   const firebase = useFirebase();
   const activeUser = firebase.currentLoggedInUser();
+  const handleRoomOpen = firebase.handleRoomOpen;
   const isMediumScreen = useMediaQuery("(max-width: 860px)");
   const isSmallScreen = useMediaQuery("(max-width: 600px)");
   const isExtraSmallScreen = useMediaQuery("(max-width: 480px)");
@@ -93,6 +94,25 @@ const Header = () => {
             </List>
             {activeUser?.authStatus && (
               <Button
+                onClick={handleRoomOpen}
+                sx={{
+                  fontSize: "15px",
+                  backgroundColor: "#f9c20f",
+                  padding: "8px 20px",
+                  color: "#000",
+                  fontWeight: "700",
+                  "&:hover": {
+                    backgroundColor: "#f9c20f",
+                  },
+                  marginRight:"10px",
+                  display: { xs: "none", sm: "none", md: "flex" },
+                }}
+              >
+               <Add/> Add Room
+              </Button>
+            )}
+            {activeUser?.authStatus && (
+              <Button
                 onClick={() => firebase.signOutUser()}
                 sx={{
                   fontSize: "15px",
@@ -109,6 +129,7 @@ const Header = () => {
                 Logout
               </Button>
             )}
+            
             {(isMediumScreen || isSmallScreen || isExtraSmallScreen) && (
               <IconButton
                 size="large"

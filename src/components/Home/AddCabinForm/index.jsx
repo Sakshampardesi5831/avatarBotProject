@@ -1,28 +1,32 @@
-import { Fragment, useState } from "react";
-import { Box, Typography, TextField, Button } from "@mui/material";
+import { useState } from "react";
+import { Fragment } from "react";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import { useFirebase } from "../../../context/Firebase";
-
-const BoardNameForm = () => {
+const AddCabinForm = () => {
   const firebase = useFirebase();
-  const setBoardForm=firebase.setBoardForm;
-  const handleCloseDialog = firebase.handleDialogClose;
-  const formData=firebase.formData;
-  const [cabinName, setCabinName] = useState("");
+  const [cabinName1, setCabinName1] = useState("");
+  const addCabinFormData = firebase.addCabinFormData;
   const [error, setError] = useState(false);
-  const handleSubmit = (e) => {
-    if (cabinName.length == 0) {
+  const [formsToGenerate, setFormsGenerate] = useState(0);
+  const handleCabinClose = firebase.handleCabinClose;
+  const currentStep = firebase.currentStep;
+  const setCurrentStep = firebase.setCurrentStep;
+  const setBoardForm = firebase.setBoardForm;
+  
+  const handleSubmit =(e) => {
+    e.preventDefault();
+    console.log("hello");
+    if(cabinName1===""){
       setError(true);
       return;
     }
-    let newData={}
-    e.preventDefault();
-     newData={
-      cabinName:cabinName,
+    let myvalue={
+      boardName:cabinName1,
     }
-  
-    firebase.setFormData({...formData,...newData});
-    setCabinName("");
-    setBoardForm("device1");
+    firebase.setAddCabinFormData({...myvalue,...addCabinFormData})
+    firebase.setFormsToGenerate(formsToGenerate);
+    setCurrentStep(currentStep + 1);
+    setBoardForm("dynamicDevice");
   };
   return (
     <Fragment>
@@ -40,12 +44,18 @@ const BoardNameForm = () => {
         <TextField
           sx={{ width: "100%", marginTop: "20px" }}
           placeholder="Enter the Cabin Name"
-          onChange={(e) => setCabinName(e.target.value)}
-          value={cabinName}
+          onChange={(e) => setCabinName1(e.target.value)}
+          value={cabinName1}
         />
         {error && (
           <span style={{ color: "red" }}>cabin name is required !</span>
         )}
+        <TextField
+          sx={{ width: "100%", marginTop: "20px" }}
+          placeholder="Enter the Devices Quantity"
+          onChange={(e) => setFormsGenerate(e.target.value)}
+          value={formsToGenerate}
+        />
         <Box
           sx={{
             width: "100%",
@@ -64,8 +74,8 @@ const BoardNameForm = () => {
               "&:hover": {
                 backgroundColor: "red",
               },
-          }}
-            onClick={handleCloseDialog}
+            }}
+            onClick={()=>handleCabinClose()}
           >
             close
           </Button>
@@ -81,12 +91,9 @@ const BoardNameForm = () => {
             Next
           </Button>
         </Box>
-        <Typography variant="body1" sx={{ fontWeight: "700", color: "#000" }}>
-          You can Register Only 5 devices to every cabin
-        </Typography>
       </Box>
     </Fragment>
   );
 };
 
-export default BoardNameForm;
+export default AddCabinForm;

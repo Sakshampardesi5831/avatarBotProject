@@ -9,7 +9,7 @@ const BoardEntity = ({ username, id, item }) => {
   const [boardValues, setBoardValues] = useState({});
   const [checked, setChecked] = useState(false);
   const [switchOn, setSwitchOn] = useState("Off");
-
+  
   const bulb = () => {
     return switchOn === "On" ? (
       <TipsAndUpdates sx={{ fontSize: "30px", color: "#f9c20f" }} />
@@ -62,6 +62,7 @@ const BoardEntity = ({ username, id, item }) => {
       console.log("Bad Request");
     }
   };
+
 
   useEffect(() => {
     boardEntity();
@@ -124,3 +125,4 @@ const BoardEntity = ({ username, id, item }) => {
 };
 
 export default BoardEntity;
+// {boardValues[item]}

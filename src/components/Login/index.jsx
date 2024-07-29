@@ -69,6 +69,7 @@ const Login = () => {
               minHeight: "80vh",
               boxShadow: "0px 2px 5px -1px rgba(0,0,0,0.3)",
               backgroundColor: "#fff",
+              borderRadius:"20px"
             }}
           >
             <Box
@@ -228,6 +229,7 @@ const Login = () => {
                     }}
                   >
                     <Google
+                      onClick={() => firebase.signUpWithGoogle()}
                       sx={{
                         fontSize: {
                           xs: "40px",

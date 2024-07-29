@@ -10,8 +10,9 @@ import {
   Register,
   HomePage,
   AuthLayout,
-  BoardsSection,
+  RoomSection,
 } from "./components";
+import CabinBoardsDevices from "./components/Cabin/CabinCards/CabinBoardsDevices/index.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -48,10 +49,18 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/board/:id",
+        path: "/cabin/:id",
         element: (
           <AuthLayout authentication>
-            <BoardsSection />
+            <RoomSection />
+          </AuthLayout>
+        ),
+      },
+      {
+        path: "/device",
+        element: (
+          <AuthLayout authentication>
+            <CabinBoardsDevices />
           </AuthLayout>
         ),
       },

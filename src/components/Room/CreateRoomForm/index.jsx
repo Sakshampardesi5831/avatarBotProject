@@ -1,28 +1,21 @@
 import { Fragment, useState } from "react";
-import { Box, Typography, TextField, Button } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import { useFirebase } from "../../../context/Firebase";
-
-const BoardNameForm = () => {
+const CreateRoomForm = () => {
   const firebase = useFirebase();
-  const setBoardForm=firebase.setBoardForm;
-  const handleCloseDialog = firebase.handleDialogClose;
-  const formData=firebase.formData;
-  const [cabinName, setCabinName] = useState("");
+  const [room, setRoom] = useState("");
   const [error, setError] = useState(false);
-  const handleSubmit = (e) => {
-    if (cabinName.length == 0) {
+  const handleRoomCloseDialog = firebase.handleRoomClose;
+ 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (room === "") {
       setError(true);
       return;
     }
-    let newData={}
-    e.preventDefault();
-     newData={
-      cabinName:cabinName,
-    }
-  
-    firebase.setFormData({...formData,...newData});
-    setCabinName("");
-    setBoardForm("device1");
+    await firebase.saveRoomForm(room);
+    setRoom("");
+    handleRoomCloseDialog();
   };
   return (
     <Fragment>
@@ -35,17 +28,15 @@ const BoardNameForm = () => {
         }}
       >
         <Typography variant="h4" sx={{ fontWeight: "700" }}>
-          Cabin Name
+          Enter Room Name
         </Typography>
         <TextField
           sx={{ width: "100%", marginTop: "20px" }}
-          placeholder="Enter the Cabin Name"
-          onChange={(e) => setCabinName(e.target.value)}
-          value={cabinName}
+          placeholder="Enter the Room Name"
+          onChange={(e) => setRoom(e.target.value)}
+          value={room}
         />
-        {error && (
-          <span style={{ color: "red" }}>cabin name is required !</span>
-        )}
+        {error && <span style={{ color: "red" }}>room name is required !</span>}
         <Box
           sx={{
             width: "100%",
@@ -64,8 +55,8 @@ const BoardNameForm = () => {
               "&:hover": {
                 backgroundColor: "red",
               },
-          }}
-            onClick={handleCloseDialog}
+            }}
+            onClick={handleRoomCloseDialog}
           >
             close
           </Button>
@@ -78,15 +69,12 @@ const BoardNameForm = () => {
             }}
             onClick={(e) => handleSubmit(e)}
           >
-            Next
+            Save Room
           </Button>
         </Box>
-        <Typography variant="body1" sx={{ fontWeight: "700", color: "#000" }}>
-          You can Register Only 5 devices to every cabin
-        </Typography>
       </Box>
     </Fragment>
   );
 };
 
-export default BoardNameForm;
+export default CreateRoomForm;
